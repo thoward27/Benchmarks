@@ -10,7 +10,7 @@ from subprocess import run, PIPE
 
 import numpy as np
 
-from benchmarks.benchmark import Benchmark
+from Benchmarks.benchmark import Benchmark
 from source.programs import Program
 from source.config import *
 
