@@ -71,7 +71,7 @@ class cBench(Benchmark):
 
     @staticmethod
     def test():
-        compile_all = run(['./all_compile', 'gcc'], cwd=ROOT_DIR, stdout=PIPE)
+        compile_all = run(['./all_compile', 'gcc'], cwd=ROOT_DIR)
         if not compile_all.returncode == 0:
             events.error(compile_all.stderr)
             raise OSError("Cannot compile programs.")

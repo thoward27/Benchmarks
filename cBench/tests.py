@@ -1,16 +1,17 @@
+import numpy as np
 from decimal import Decimal
 from unittest import TestCase
 
-from Benchmarks.cBench import cBench
+from Benchmarks.cBench import *
 
 
 class TestcBench(TestCase):
     def test_build(self):
         programs = cBench().programs()
         # There are 28 programs.
-        self.assertEqual(len({p.name for p in programs}), 28)
+        self.assertEqual(len({p.name for p in programs}), 27)
         # Each with 5 datasets.
-        self.assertEqual(len(programs), 140)
+        self.assertEqual(len(programs), 135)
         return
 
     def test_compile(self):
@@ -34,7 +35,7 @@ class TestcBench(TestCase):
         p = programs[0]
         p.reset()
         features, runtime, done, info = p.step('-O2')
-        self.assertIsInstance(features, list)
+        self.assertIsInstance(features, np.ndarray)
         self.assertIsInstance(runtime, Decimal)
         self.assertIsInstance(done, bool)
         self.assertIsInstance(info, dict)
@@ -44,5 +45,5 @@ class TestcBench(TestCase):
         programs = cBench().programs()
         p = programs[0]
         features = p.reset()
-        self.assertIsInstance(features, list)
+        self.assertIsInstance(features, np.ndarray)
         return

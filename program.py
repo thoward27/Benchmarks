@@ -1,3 +1,4 @@
+import numpy as np
 import logging
 import re
 import shlex
@@ -5,7 +6,9 @@ import subprocess
 from decimal import Decimal
 from glob import glob
 from os.path import abspath, join, dirname
-from typing import Tuple, List
+from typing import Tuple, List, Union
+
+from source.config import FLAGS
 
 events = logging.getLogger(__name__)
 
@@ -52,6 +55,9 @@ class Program:
         self.path = path
         self._compile = compile
         self._run = run
+
+        # Constants
+        self.observation_space = 101
 
         # Internal state
         self.flags = []
@@ -124,7 +130,7 @@ class Program:
 
         return user_time + syst_time
 
-    def features(self) -> list:
+    def features(self) -> np.ndarray:
         """ Extract features from program.
         """
         result = subprocess.run(
@@ -142,10 +148,16 @@ class Program:
         for file in sorted(glob(self.path + '/*pin.out')):
             with open(file, 'r') as f:
                 features.extend(f.readline().split())
-        return [int(f) for f in features]
+        return np.array([int(f) for f in features])
 
-    def step(self, flag: str) -> Tuple[List, Decimal, bool, dict]:
+    def step(self, flag: Union[str, int]) -> Tuple[np.ndarray, Decimal, bool, dict]:
         """ Add the given flag to the current compilation sequence, compile, and run. """
+        if type(flag) is int:
+            try:
+                flag = FLAGS[flag]
+            except IndexError:
+                return np.array([]), (self.runtimes[0] - self.runtimes[-1]) / self.runtimes[0], True, {}
+
         # Compile and run with the new flag.
         self.flags.append(flag)
         self.compile(self.flags)
