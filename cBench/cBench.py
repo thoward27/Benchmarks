@@ -11,7 +11,7 @@ from subprocess import run, PIPE
 import numpy as np
 
 from Benchmarks.benchmark import Benchmark
-from source.programs import Program
+from Benchmarks.program import Program
 from source.config import *
 
 ROOT_DIR = os.path.join(os.path.dirname(__file__), 'cBench')
@@ -38,8 +38,9 @@ class cBench(Benchmark):
                             name=str(path.split('/')[-2]),
                             dataset=str(i),
                             path=path,
-                            str_run="./__run {} {}".format(i, LOOPS),  # 75 == Number of loops to do.
-                            str_compile="make CCC_OPTS='-w {}'",
+                            run="./__run {} {}".format(i, LOOPS),  # 75 == Number of loops to do.
+                            compile="make CCC_OPTS='-w {}'",
+                            features="{} -t {} -- ./__run {} {}".format(PIN, MICA, i, LOOPS)
                         )
                     )
         return

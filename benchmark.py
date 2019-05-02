@@ -1,7 +1,7 @@
 """ Abstract Benchmark Class.
 """
 import json
-from abc import ABC
+from abc import ABC, abstractmethod
 
 ROOT_DIR = ''
 
@@ -34,7 +34,6 @@ class Benchmark(ABC):
 
     def generate_runtimes(self, save_path, num_loops=5):
         """ Generates runtimes. """
-        print("Generating runtimes to save to: " + save_path)
         runtimes = {}
         for i in range(num_loops):
             [p.build_runtimes() for p in self.programs]
@@ -44,34 +43,37 @@ class Benchmark(ABC):
             with open(save_path, 'w') as f:
                 json.dump({'runtimes': runtimes}, f)
 
+    @abstractmethod
     def collect_programs(self) -> None:
         """ Builds the Programs List. """
-        raise NotImplemented
+        pass
 
+    @abstractmethod
     def generate_dynamic(self) -> None:
         """ Generate Dynamic Features. """
-        raise NotImplemented
+        pass
 
+    @abstractmethod
     def generate_static(self) -> None:
         """ Generate Static Features. """
-        raise NotImplemented
+        pass
 
+    @abstractmethod
     def collect_runtimes(self) -> None:
         """ Collects the runtimes from cache. """
-        raise NotImplemented
+        pass
 
+    @abstractmethod
     def collect_dynamic(self) -> None:
         """ Collect Previously Generated Dynamic Features. """
-        raise NotImplemented
+        pass
 
+    @abstractmethod
     def collect_static(self) -> None:
         """ Collect Previously Generated Static Features. """
-        raise NotImplemented
+        pass
 
+    @abstractmethod
     def clean(self) -> None:
         """ Clean the Benchmark Folder. """
-        raise NotImplemented
-
-    def test(self) -> None:
-        """ Test the Benchmark Suite. """
-        raise NotImplemented
+        pass
