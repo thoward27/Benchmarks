@@ -14,7 +14,6 @@ then
   cp -rf src src_work
   cd src_work
   cp ../../mica.conf ./mica.conf
-  cp ../../itypes_default.spec ./itypes_default.spec
   sed -i 's/-lm \*.o/\*.o -lm/g' Makefile.gcc
   cp Makefile.gcc Makefile
   # *************************
