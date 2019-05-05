@@ -26,7 +26,7 @@ class TestcBench(TestCase):
         p = programs[0]
         p.compile(['-O2'])
         runtime = p.run()
-        self.assertIsInstance(runtime, Decimal)
+        self.assertIsInstance(runtime, float)
         self.assertLess(runtime, Decimal("inf"))
         return
 
@@ -36,7 +36,7 @@ class TestcBench(TestCase):
         p.reset()
         features, runtime, done, info = p.step('-O2')
         self.assertIsInstance(features, np.ndarray)
-        self.assertIsInstance(runtime, Decimal)
+        self.assertIsInstance(runtime, float)
         self.assertIsInstance(done, bool)
         self.assertIsInstance(info, dict)
         return

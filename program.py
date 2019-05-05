@@ -16,26 +16,6 @@ PIN = abspath(join(dirname(__file__), 'pin', 'pin'))
 MICA = abspath(join(dirname(__file__), 'pin', 'source', 'tools', 'MICA', 'obj-intel64', 'mica.so'))
 
 
-class Programs:
-    """ A simple wrapper over a list of programs, providing a `filter` method. """
-
-    def __init__(self):
-        from Benchmarks.cBench import cBench
-        self.programs = list(cBench().programs())
-
-    def __iter__(self):
-        for p in self.programs:
-            yield p
-
-    def __getitem__(self, item):
-        return self.programs[item]
-
-    def filter(self, program):
-        train, test = [], []
-        [train.append(p) if p != program else test.append(p) for p in self.programs]
-        return train, test
-
-
 class Program:
     """ A single executable program.
 
@@ -104,7 +84,7 @@ class Program:
             raise OSError("Failed to compile {}".format(repr(self)))
         return
 
-    def run(self) -> Decimal:
+    def run(self) -> float:
         """ Run the program, return it's runtime.
         """
         result = subprocess.run(
@@ -150,7 +130,7 @@ class Program:
                 features.extend(f.readline().split())
         return np.array([int(f) for f in features])
 
-    def step(self, flag: Union[str, int]) -> Tuple[np.ndarray, Decimal, bool, dict]:
+    def step(self, flag: Union[str, int, list]) -> Tuple[np.ndarray, Decimal, bool, dict]:
         """ Add the given flag to the current compilation sequence, compile, and run. """
         if type(flag) is int:
             try:
@@ -178,7 +158,27 @@ class Program:
         return features, reward, end, info
 
     @staticmethod
-    def _compute_time(group) -> Decimal:
+    def _compute_time(group) -> float:
         time = group.split('m')
-        time = Decimal(time[0]) * 60 + Decimal(time[1])
+        time = float(time[0]) * 60 + float(time[1])
         return time
+
+
+class Programs:
+    """ A simple wrapper over a list of programs, providing a `filter` method. """
+
+    def __init__(self):
+        from Benchmarks.cBench import cBench
+        self.programs = list(cBench().programs())
+
+    def __iter__(self):
+        for p in self.programs:
+            yield p
+
+    def __getitem__(self, item):
+        return self.programs[item]
+
+    def filter(self, program) -> Tuple[List[Program], List[Program]]:
+        train, test = [], []
+        [train.append(p) if p != program else test.append(p) for p in self.programs]
+        return train, test
