@@ -6,6 +6,7 @@ from csv import reader
 from subprocess import run, PIPE
 
 import numpy as np
+import torch
 
 from Benchmarks.benchmark import Benchmark
 from Benchmarks.program import Program
@@ -15,6 +16,9 @@ CACHE_DIR = os.path.join(os.path.dirname(__file__), 'cache')
 DATASETS = 5
 DATASTART = 1
 LOOPS = 75
+
+MEAN = torch.load(os.path.join(os.path.dirname(__file__), 'mean.t'))
+STD = torch.load(os.path.join(os.path.dirname(__file__), 'std.t'))
 
 events = logging.getLogger(__name__)
 
