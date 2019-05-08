@@ -65,7 +65,8 @@ class Program:
         return repr(self) < repr(other)
 
     def reset(self):
-        self.compile([])
+        self.flags = []
+        self.compile(self.flags)
         self.runtimes = [self.run()]
         return self.features()
 
